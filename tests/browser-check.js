@@ -1,0 +1,34 @@
+async page => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
+  await page.goto('http://127.0.0.1:5173');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.locator('canvas').waitFor();
+  if (await page.getByRole('alert').count()) throw new Error('Scene failed');
+  const canvas = page.locator('canvas');
+  const before = await canvas.screenshot();
+  await page.mouse.move(450, 400); await page.mouse.down(); await page.mouse.move(620, 450, { steps: 12 }); await page.mouse.up();
+  const after = await canvas.screenshot();
+  if (before.equals(after)) throw new Error('Orbit did not change image');
+  await page.getByRole('button', { name: '▦ Cenital' }).click();
+  if (await page.getByRole('button', { name: '▦ Cenital' }).getAttribute('aria-pressed') !== 'true') throw new Error('Camera store failed');
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: 'fundadores-3d/qa-cenital.png' });
+  await page.getByRole('checkbox', { name: 'Etiquetas de elementos' }).uncheck();
+  const hidden = await canvas.screenshot();
+  await page.getByRole('checkbox', { name: 'Etiquetas de elementos' }).check();
+  if (hidden.equals(await canvas.screenshot())) throw new Error('Labels did not toggle');
+  await page.getByRole('checkbox', { name: 'Cierres perimetrales e interiores' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Cierres perimetrales e interiores' }).check();
+  await page.getByRole('button', { name: '◇ Vista 3D' }).click();
+  await page.getByRole('button', { name: '↺ Encuadrar' }).click();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: 'fundadores-3d/qa-3d.png' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Mobile overflow');
+  await page.screenshot({ path: 'fundadores-3d/qa-mobile.png' });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  if (errors.length) throw new Error(errors.join('\n'));
+  return { result: 'PASS', checks: ['WebGL', 'OrbitControls', 'Pinia camera state', 'Cenital / 3D', 'Labels', 'Closures', 'Resize mobile', 'No console errors'] };
+}
