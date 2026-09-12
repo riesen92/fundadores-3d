@@ -67,7 +67,7 @@ function toggleSimulation() {
           <label class="follow-control"><span>Seguir a</span>
             <select v-model="selectedValue" aria-label="Bombero a seguir">
               <option value="">Vista general</option>
-              <option v-for="id in 8" :key="id" :value="id">B{{ id }} · {{ strategies.actual?.bomberos[id]?.nombre ?? `B${id}` }}</option>
+              <option v-for="id in 8" :key="id" :value="id">Bombero {{ id }}</option>
             </select>
           </label>
           <output class="simulator-status"><strong>{{ runtime.tiempo.toFixed(1) }} s</strong><span>{{ status }}</span></output>
