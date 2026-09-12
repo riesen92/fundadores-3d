@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import Simulator3D from '../components/Simulator3D.vue'
 import CameraControls from '../components/CameraControls.vue'
+import CourtInfo from '../components/CourtInfo.vue'
 import { useStrategyStore } from '../stores/strategy.store'
 
 const strategies = useStrategyStore()
 strategies.inicializar()
+
+const palcoAbierto = ref(false)
+const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') palcoAbierto.value = false }
+onMounted(() => window.addEventListener('keydown', onKey))
+onBeforeUnmount(() => { window.removeEventListener('keydown', onKey); strategies.cerrar() })
 
 const followed = ref<number | null>(null)
 const selectedValue = computed({
@@ -37,15 +43,18 @@ function toggleSimulation() {
   else strategies.reproduciendo = !strategies.reproduciendo
 }
 
-onBeforeUnmount(() => strategies.cerrar())
 </script>
 
 <template>
   <div class="simulator-page">
-    <header class="simulator-header"><div class="brand-icon">F</div><div><p class="eyebrow">COMPETENCIA BOMBERIL · 2026</p><h1>Los Fundadores<span> / Simulador</span></h1></div></header>
+    <header class="simulator-header"><div class="brand-icon">F</div><div><p class="eyebrow">COMPETENCIA BOMBERIL · 2026</p><h1>Los Fundadores<span> / Simulador</span></h1></div><button class="court-info-toggle" :aria-expanded="palcoAbierto" aria-controls="panel-cancha" @click="palcoAbierto = !palcoAbierto">ⓘ Información de la cancha</button></header>
     <main class="simulator-main">
       <section class="simulator-stage" aria-label="Simulador de la competencia">
-        <Simulator3D :selected-firefighter="followed" follow-selected hide-routes />
+        <Simulator3D :selected-firefighter="followed" follow-selected />
+        <div v-if="palcoAbierto" class="court-drawer" id="panel-cancha" role="dialog" aria-label="Información de la cancha">
+          <div class="court-drawer-head"><strong>Información de la cancha</strong><button class="court-drawer-close" @click="palcoAbierto = false">Cerrar ✕</button></div>
+          <div class="court-drawer-body"><CourtInfo :sin-seguimiento="followed === null" /></div>
+        </div>
         <div class="simulator-console">
           <button class="simulator-action" :disabled="!strategies.puedeSimular && !strategies.activa" @click="toggleSimulation">{{ buttonLabel }}</button>
           <button class="simulator-reset" :disabled="!canRestart" title="Restaurar y reproducir desde el inicio" @click="strategies.iniciar()">↻ Reiniciar</button>

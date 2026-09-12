@@ -6,11 +6,9 @@ async page => {
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()) })
   try {
     await page.goto('http://127.0.0.1:5173/editor'); const canvas = page.locator('canvas'); await canvas.waitFor()
-    await page.getByRole('button', { name: '+ Secuencia completa B1–B8', exact: true }).click()
     await page.getByText('Información de la cancha', { exact: true }).click()
     const toggle = page.getByRole('checkbox', { name: 'Recorridos de bomberos', exact: true })
     if (await toggle.isChecked()) throw Error('Routes should start hidden')
-
     await toggle.check(); await page.waitForTimeout(50)
     const b1Visible = await canvas.screenshot()
     await toggle.uncheck(); await page.waitForTimeout(50)
@@ -21,7 +19,6 @@ async page => {
     const b2Visible = await canvas.screenshot()
     if (b2Visible.equals(editHidden)) throw Error('Selected B2 route was not shown')
     if (b2Visible.equals(b1Visible)) throw Error('Changing the selected firefighter did not change the route')
-
     await page.getByRole('button', { name: '▶ Simular estrategia', exact: true }).click()
     await page.getByRole('button', { name: 'Pausar', exact: true }).click()
     const activeVisible = await canvas.screenshot()
@@ -33,7 +30,6 @@ async page => {
     await page.getByRole('button', { name: 'Pausar', exact: true }).click()
     await toggle.check(); await page.waitForTimeout(50)
     if (activeHidden.equals(await canvas.screenshot())) throw Error('Active task routes did not return')
-
     await page.reload(); await canvas.waitFor()
     await page.getByText('Información de la cancha', { exact: true }).click()
     if (await page.getByRole('checkbox', { name: 'Recorridos de bomberos', exact: true }).isChecked()) throw Error('Routes did not reset to hidden after reload')
