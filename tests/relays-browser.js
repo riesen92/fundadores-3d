@@ -5,7 +5,7 @@ async page => {
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
   try {
-    await page.goto('http://127.0.0.1:5173'); await page.locator('canvas').waitFor();
+    await page.goto('http://127.0.0.1:5173/editor'); await page.locator('canvas').waitFor();
     await page.getByLabel('Nombre de B1', { exact: true }).fill('Carlos');
     await page.getByLabel('Nombre de B1', { exact: true }).press('Tab');
     const original = await page.evaluate(() => JSON.parse(localStorage.getItem('fundadores-estrategias-v1')).estrategias[0]);

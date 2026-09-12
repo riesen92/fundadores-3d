@@ -5,7 +5,7 @@ async page => {
   page.on('pageerror', error => errors.push(error.message))
   page.on('console', entry => { if (entry.type() === 'error') errors.push(entry.text()) })
   try {
-    await page.goto('http://127.0.0.1:5173'); const canvas = page.locator('canvas'); await canvas.waitFor()
+    await page.goto('http://127.0.0.1:5173/editor'); const canvas = page.locator('canvas'); await canvas.waitFor()
     await page.getByRole('button', { name: '+ Secuencia completa B1–B8', exact: true }).click()
     await page.getByRole('button', { name: '+ Agregar preparación de agua', exact: true }).click()
     await page.getByRole('button', { name: '+ Agregar tendidos por blanco', exact: true }).click()

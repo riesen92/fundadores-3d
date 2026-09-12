@@ -1,5 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { canonicalPath, routeFromPath, routePath } from '../src/routing.ts'
 import { CANCHA, ACCESOS, ZONAS } from '../src/data/cancha.ts'
 import { REGLAS } from '../src/data/reglas.ts'
 test('Las aberturas quedan contenidas en su tramo de cierre', () => {
@@ -11,6 +12,16 @@ test('Catálogo de sanciones mantiene categorías y segundos reglamentarios', ()
   assert.equal(REGLAS.length, 15); assert.equal(new Set(REGLAS.map(r => r.id)).size, 15)
   assert.equal(REGLAS.filter(r => r.tipo === 'descalificacion').length, 6)
   assert.deepEqual(REGLAS.filter(r => r.tipo === 'tiempo').map(r => r.segundos), [120,120,120,180,180,60,60,60,60])
+})
+test('Las rutas separan simulador y editor respetando la base de GitHub Pages', () => {
+  assert.equal(routeFromPath('/', '/'), 'simulador')
+  assert.equal(routeFromPath('/simulador', '/'), 'simulador')
+  assert.equal(routeFromPath('/editor', '/'), 'editor')
+  assert.equal(routeFromPath('/fundadores-3d/editor', '/fundadores-3d/'), 'editor')
+  assert.equal(routeFromPath('/fundadores-3d/simulador/', '/fundadores-3d/'), 'simulador')
+  assert.equal(routePath('simulador', '/fundadores-3d/'), '/fundadores-3d/simulador')
+  assert.equal(canonicalPath('/fundadores-3d/', '/fundadores-3d/'), '/fundadores-3d/simulador')
+  assert.equal(canonicalPath('/fundadores-3d/editor', '/fundadores-3d/'), null)
 })
 import { calcularRuta, segmentoValido, distanciaRuta } from '../src/simulation/routes.ts'
 test('Rutas atraviesan solo pasos y respetan ingreso y salida',()=>{

@@ -7,7 +7,7 @@ async page => {
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
   try {
-    await page.goto('http://127.0.0.1:5173');
+    await page.goto('http://127.0.0.1:5173/editor');
     await page.locator('canvas').waitFor();
     if (await page.getByRole('alert').count()) throw Error('Scene failed');
     await page.getByLabel('Nombre de estrategia', { exact: true }).fill('Prueba de tareas');

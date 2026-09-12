@@ -2,7 +2,7 @@ async page => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
-  await page.goto('http://127.0.0.1:5173');
+  await page.goto('http://127.0.0.1:5173/editor');
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.locator('canvas').waitFor();
   if (await page.locator('.webgl-error').count()) throw new Error('Scene failed');

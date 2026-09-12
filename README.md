@@ -16,6 +16,12 @@ npm run dev
 
 Abrir la dirección local que indica Vite, normalmente http://127.0.0.1:5173.
 
+La aplicación separa sus dos usos:
+
+- `/simulador` es la vista principal de reproducción, sin controles de edición.
+- `/editor` contiene la planificación completa.
+- `/` cambia la dirección a `/simulador` al cargar.
+
 ```powershell
 npm run build
 npm test
@@ -26,6 +32,10 @@ Si el entorno corporativo presenta `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, usar los c
 ## Uso
 
 Arrastrar para orbitar, rueda para zoom, botón derecho para desplazar. Los botones cambian entre vista diagonal y cenital; Encuadrar restaura la cámara. En cenital se bloquea la rotación para conservar C arriba, A abajo, B izquierda y D derecha. Las casillas ocultan etiquetas, recorridos de bomberos y cierres solo visualmente. **Recorridos de bomberos** comienza desactivado y, al activarlo, muestra únicamente el recorrido de B1–B8 seleccionado. Ocultar recorridos no afecta mangueras, líneas A/B ni chorros.
+
+En `/simulador`, **Vista general** conserva el encuadre completo desde arriba en cenital. Elegir B1–B8 acerca la cámara y mantiene al bombero seleccionado centrado mientras se mueve, sin impedir orbitar o acercar; en cenital el seguimiento conserva la orientación cenital (C arriba, A abajo). El botón principal cambia entre Simular, Pausar, Continuar y Repetir. **Reiniciar** vuelve el tiempo, los bomberos, los materiales y los blancos al inicio y reproduce de nuevo, conservando la velocidad, la vista y el bombero elegido. El selector de **velocidad** (0,25×, 0,5×, 1×, 2×, 4×) arranca en 1× y puede cambiarse antes, durante o en pausa; no se restablece al Simular o Continuar. Esta vista usa la misma estrategia y los mismos nombres guardados en `/editor`.
+
+GitHub Pages publica con base `/fundadores-3d/`. El flujo de Actions copia `dist/index.html` a `dist/404.html` para que recargar `/fundadores-3d/simulador` o `/fundadores-3d/editor` abra la vista correcta.
 
 ## Editor de estrategias por tareas (versión actual)
 
@@ -79,7 +89,8 @@ Tipos públicos: `Tarea` separa definición (operación/categoría, objetivo, re
 
 ## Arquitectura y archivos
 
-- `src/App.vue`: interfaz, información, catálogo de sanciones y estado de las próximas fases.
+- `src/App.vue` y `src/routing.ts`: selección de `/simulador` o `/editor`, con normalización de la ruta principal según la base de Vite.
+- `src/views/{SimulatorView,EditorView}.vue`: reproducción pública simplificada e interfaz completa de planificación.
 - `src/components/Simulator3D.vue`: montaje y desmontaje, enlace con Pinia y manejo de error de escena.
 - `src/components/CameraControls.vue`: selección y restablecimiento de cámara.
 - `src/three/core/SceneManager.ts`: cámara, renderer, OrbitControls, luces, resize y liberación de recursos. Se mantienen juntos por compartir el mismo ciclo de vida.

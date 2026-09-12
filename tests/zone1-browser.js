@@ -1,6 +1,6 @@
 async page => {
 const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',e=>{if(e.type()==='error')errors.push(e.text())});
-await page.goto('http://127.0.0.1:5173');await page.setViewportSize({width:1440,height:1000});
+await page.goto('http://127.0.0.1:5173/editor');await page.setViewportSize({width:1440,height:1000});
 const original=await page.getByLabel('Nombre de B1',{exact:true}).inputValue();
 await page.getByLabel('Nombre de B1',{exact:true}).fill('Prueba nombre');await page.getByLabel('Nombre de B1',{exact:true}).press('Tab');await page.reload();
 if(await page.getByLabel('Nombre de B1',{exact:true}).inputValue()!=='Prueba nombre')throw Error('Name persistence');

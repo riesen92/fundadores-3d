@@ -5,7 +5,7 @@ async page => {
   page.on('pageerror', e => errors.push(e.message))
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()) })
   try {
-    await page.goto('http://127.0.0.1:5173'); const canvas = page.locator('canvas'); await canvas.waitFor()
+    await page.goto('http://127.0.0.1:5173/editor'); const canvas = page.locator('canvas'); await canvas.waitFor()
     if (!await page.getByText('14/14 piezas asignadas', { exact: true }).isVisible()) throw Error('Fresh startup is not fully assigned')
     await page.evaluate(async () => {
       const { secuenciaCompleta } = await import('/src/simulation/baseStrategy.ts')

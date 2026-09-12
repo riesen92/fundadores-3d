@@ -5,3 +5,6 @@ dist/
 *.md
 *.md
 *.md
+!BASE.md
+*.md
+*.md

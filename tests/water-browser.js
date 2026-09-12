@@ -5,7 +5,7 @@ async page => {
   page.on('pageerror', e => errors.push(e.message))
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()) })
   try {
-    await page.goto('http://127.0.0.1:5173'); await page.locator('canvas').waitFor()
+    await page.goto('http://127.0.0.1:5173/editor'); await page.locator('canvas').waitFor()
     await page.getByRole('button', { name: '+ Secuencia completa B1–B8', exact: true }).click()
     await page.getByRole('button', { name: '+ Agregar preparación de agua', exact: true }).click()
     if (!await page.getByRole('button', { name: '▶ Simular estrategia', exact: true }).isDisabled()) throw Error('Detailed plan started without assignments and lines')

@@ -1,6 +1,6 @@
 async page => {
 const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',e=>{if(e.type()==='error')errors.push(e.text())});
-await page.goto('http://127.0.0.1:5173');await page.setViewportSize({width:1440,height:1000});await page.locator('canvas').waitFor();
+await page.goto('http://127.0.0.1:5173/editor');await page.setViewportSize({width:1440,height:1000});await page.locator('canvas').waitFor();
 if(await page.getByRole('alert').count())throw Error('Scene error');
 await page.getByRole('button',{name:'B3',exact:true}).click();await page.getByLabel('Rol de B3').fill('Rescate');await page.getByLabel('Velocidad (m/s)').fill('3');await page.getByLabel('Velocidad (m/s)').press('Tab');
 await page.getByRole('button',{name:'+ Material',exact:true}).click();await page.getByRole('button',{name:'+ Zona IV',exact:true}).click();

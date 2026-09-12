@@ -5,7 +5,7 @@ async page => {
   page.on('pageerror', e => errors.push(e.message))
   page.on('console', e => { if (e.type() === 'error') errors.push(e.text()) })
   try {
-    await page.goto('http://127.0.0.1:5173'); const canvas = page.locator('canvas'); await canvas.waitFor()
+    await page.goto('http://127.0.0.1:5173/editor'); const canvas = page.locator('canvas'); await canvas.waitFor()
     await page.getByRole('button', { name: '+ Secuencia completa B1–B8', exact: true }).click()
     await page.getByText('Información de la cancha', { exact: true }).click()
     const toggle = page.getByRole('checkbox', { name: 'Recorridos de bomberos', exact: true })
