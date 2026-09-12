@@ -1,5 +1,5 @@
 export interface PosicionCancha { x: number; y: number; z: number; fuente: 'reglamento' | 'croquis' | 'aproximacion'; confirmada: boolean; observacion?: string }
-export const posicion = (x: number, z: number, y = 0): PosicionCancha => ({ x, y, z, fuente: 'aproximacion', confirmada: false, observacion: 'Ubicación provisional; croquis no disponible.' })
+export const posicion = (x: number, z: number, y = 0): PosicionCancha => ({ x, y, z, fuente: 'croquis', confirmada: false, observacion: 'Ubicación estimada del croquis aportado; sin cota métrica exacta.' })
 export const CANCHA = { ancho: 50, largo: 50, mitad: 25, alturaCierreVisual: 2.5, espesorCierreVisual: 0.18, cierresInfranqueables: true }
 export const ZONAS = [
   { id: 'I', x: -12.5, z: -12.5, color: '#648879', blancos: [1, 2] },

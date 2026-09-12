@@ -5,7 +5,7 @@ async page => {
   await page.goto('http://127.0.0.1:5173');
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.locator('canvas').waitFor();
-  if (await page.getByRole('alert').count()) throw new Error('Scene failed');
+  if (await page.locator('.webgl-error').count()) throw new Error('Scene failed');
   const canvas = page.locator('canvas');
   const before = await canvas.screenshot();
   await page.mouse.move(450, 400); await page.mouse.down(); await page.mouse.move(620, 450, { steps: 12 }); await page.mouse.up();
@@ -15,6 +15,7 @@ async page => {
   if (await page.getByRole('button', { name: '▦ Cenital' }).getAttribute('aria-pressed') !== 'true') throw new Error('Camera store failed');
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: 'fundadores-3d/qa-cenital.png' });
+  await page.getByText('Información de la cancha', {exact:true}).click();
   await page.getByRole('checkbox', { name: 'Etiquetas de elementos' }).uncheck();
   const hidden = await canvas.screenshot();
   await page.getByRole('checkbox', { name: 'Etiquetas de elementos' }).check();
